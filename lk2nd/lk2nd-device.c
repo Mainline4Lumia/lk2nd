@@ -335,6 +335,7 @@ static void lk2nd_parse_device_node(const void *fdt)
 #endif
 	lk2nd_motorola_smem_write_unit_info(fdt, offset);
 	lk2nd_smd_rpm_hack_opening(fdt, offset);
+	lk2nd_relocate_fb(fdt, offset);
 
 	lk2nd_dev.model = lkfdt_copyprop_str(fdt, offset, "model");
 	if (lk2nd_dev.model)
