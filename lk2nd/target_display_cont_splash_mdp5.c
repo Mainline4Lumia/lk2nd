@@ -138,8 +138,8 @@ static int mdp5_read_config(struct fbcon_config *fb)
 		fb->width = fb->stride;
 	}
 
-	if (cmd_mode)
-		mdp5_cmd_start_refresh(fb);
+	/*if (cmd_mode)
+		mdp5_cmd_start_refresh(fb);*/
 
 	// Validate parameters
 	if (fb->stride == 0 || fb->width == 0 || fb->height == 0) {
