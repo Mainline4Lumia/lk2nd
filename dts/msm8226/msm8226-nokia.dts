@@ -1,0 +1,54 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
+/dts-v1/;
+
+#include <skeleton.dtsi>
+#include <lk2nd.h>
+
+/ {
+	// This is used by the bootloader to find the correct DTB
+	qcom,msm-id = <200 0>;
+	qcom,board-id = <8 0>;
+
+	tesla {
+		model = "Nokia Lumia 830";
+		compatible = "nokia,tesla", "qcom,msm8226", "lk2nd,device";
+
+		lk2nd,smd-rpm-hack-opening;
+		lk2nd,relocate-fb = <0xf100000>;
+		lk2nd,keys =
+			<KEY_VOLUMEUP   106 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>,
+			<KEY_HOME   107 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>; // Camera shot key
+	};
+
+	dempsey {
+		model = "Nokia Lumia 640";
+		compatible = "nokia,dempsey", "qcom,msm8226", "lk2nd,device";
+
+		lk2nd,smd-rpm-hack-opening;
+		lk2nd,relocate-fb = <0xf100000>;
+		lk2nd,keys =
+			<KEY_VOLUMEUP   106 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+	};
+
+	moneypenny {
+		model = "Nokia Lumia 630/635/638";
+		compatible = "nokia,moneypenny", "qcom,msm8226", "lk2nd,device";
+
+		lk2nd,smd-rpm-hack-opening;
+		lk2nd,relocate-fb = <0xf100000>;
+		lk2nd,keys =
+			<KEY_VOLUMEUP   106 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+	};
+
+	superman {
+		model = "Nokia Lumia 730";
+		compatible = "nokia,superman", "qcom,msm8226", "lk2nd,device";
+
+		lk2nd,smd-rpm-hack-opening;
+		lk2nd,relocate-fb = <0xf100000>;
+		lk2nd,keys =
+			<KEY_VOLUMEUP   106 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+	};
+
+};
