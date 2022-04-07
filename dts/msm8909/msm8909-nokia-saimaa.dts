@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
+/dts-v1/;
+
+#include <skeleton.dtsi>
+#include <lk2nd.h>
+
+/ {
+	// This is used by the bootloader to find the correct DTB
+	qcom,msm-id = <245 0>;
+	qcom,board-id = <8 0>;
+
+	model = "Microsoft Lumia 550";
+	compatible = "nokia,saimaa", "qcom,msm8909", "lk2nd,device";
+
+	lk2nd,relocate-fb = <0x83200000>;
+};
