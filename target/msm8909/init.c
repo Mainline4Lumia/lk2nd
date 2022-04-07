@@ -208,8 +208,12 @@ void *target_mmc_device()
 	return (void *) dev;
 }
 
+#if WITH_LK2ND
+int target_volume_up_old()
+#else
 /* Return 1 if vol_up pressed */
 int target_volume_up()
+#endif
 {
         static uint8_t first_time = 0;
 	uint8_t status = 0;
@@ -230,8 +234,12 @@ int target_volume_up()
 	return !status;
 }
 
+#if WITH_LK2ND
+int target_volume_down_old()
+#else
 /* Return 1 if vol_down pressed */
 uint32_t target_volume_down()
+#endif
 {
 	if ((board_hardware_id() == HW_PLATFORM_QRD) &&
 			(board_hardware_subtype() == SUB_TYPE_SKUT)) {
@@ -255,6 +263,7 @@ uint32_t target_volume_down()
 
 static void target_keystatus()
 {
+#if !WITH_LK2ND
 	keys_init();
 
 	if(target_volume_down())
@@ -262,7 +271,7 @@ static void target_keystatus()
 
 	if(target_volume_up())
 		keys_post_event(KEY_VOLUMEUP, 1);
-
+#endif
 }
 
 static void set_sdc_power_ctrl()
@@ -498,6 +507,9 @@ int target_cont_splash_screen()
 {
 	uint8_t splash_screen = 0;
 	if (!splash_override) {
+#if WITH_LK2ND
+		splash_screen = 1;
+#else
 		switch (board_hardware_id()) {
 		case HW_PLATFORM_SURF:
 		case HW_PLATFORM_MTP:
@@ -506,10 +518,11 @@ int target_cont_splash_screen()
 			splash_screen = 1;
 			break;
 		default:
-			splash_screen = 0;
+			splash_screen = 1;
 			break;
 		}
 		dprintf(SPEW, "Target_cont_splash=%d\n", splash_screen);
+#endif
 	}
 	return splash_screen;
 }
