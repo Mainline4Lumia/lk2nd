@@ -104,8 +104,12 @@ void target_early_init(void)
 #endif
 }
 
+#if WITH_LK2ND
+int target_volume_up_old()
+#else
 /* Return 1 if vol_up pressed */
 int target_volume_up()
+#endif
 {
 	uint8_t status = 0;
 
@@ -120,8 +124,12 @@ int target_volume_up()
 	return !status;
 }
 
+#if WITH_LK2ND
+int target_volume_down_old()
+#else
 /* Return 1 if vol_down pressed */
 uint32_t target_volume_down()
+#endif
 {
 	/* Volume down button tied in with PMIC RESIN. */
 	return pm8x41_resin_status();
@@ -129,6 +137,7 @@ uint32_t target_volume_down()
 
 static void target_keystatus()
 {
+#if !WITH_LK2ND
 	keys_init();
 
 	if(target_volume_down())
@@ -136,6 +145,7 @@ static void target_keystatus()
 
 	if(target_volume_up())
 		keys_post_event(KEY_VOLUMEUP, 1);
+#endif
 }
 
 void target_sdc_init()
@@ -401,6 +411,9 @@ int target_cont_splash_screen()
 {
 	uint8_t splash_screen = 0;
 	if(!splash_override) {
+#if WITH_LK2ND
+		splash_screen = 1;
+#else
 		switch(board_hardware_id())
 		{
 			case HW_PLATFORM_QRD:
@@ -413,6 +426,7 @@ int target_cont_splash_screen()
 				dprintf(SPEW, "Target_cont_splash=0\n");
 				splash_screen = 0;
 		}
+#endif
 	}
 	return splash_screen;
 }
