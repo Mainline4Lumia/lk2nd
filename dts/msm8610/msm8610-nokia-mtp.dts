@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
+/dts-v1/;
+
+#include <skeleton.dtsi>
+#include <lk2nd.h>
+
+/ {
+	// This is used by the bootloader to find the correct DTB
+	qcom,msm-id = <164 10001>;
+	qcom,board-id = <8 0>;
+
+	/* All the Nokia devices are expected to use lk1st, which passes the 
+	compatible to lk2nd, so no need for extra device matching. 
+	These nodes are listed in no particular order. */
+	
+	nokia-chakra {
+		model = "Microsoft Lumia 535";
+		compatible = "nokia,chakra", "qcom,msm8610", "lk2nd,device";
+
+		lk2nd,smd-rpm-hack-opening;
+		lk2nd,relocate-fb = <0x0FF00000>;
+	};
+	
+	nokia-rock {
+		model = "Microsoft Lumia 530";
+		compatible = "nokia,rock", "qcom,msm8610", "lk2nd,device";
+
+		lk2nd,smd-rpm-hack-opening;
+		lk2nd,relocate-fb = <0x0FF00000>;
+	};
+	
+	nokia-vela {
+		model = "Microsoft Lumia 435";
+		compatible = "nokia,vela", "qcom,msm8610", "lk2nd,device";
+
+		lk2nd,smd-rpm-hack-opening;
+		lk2nd,relocate-fb = <0x0FF00000>;
+	};
+	
+	nokia-lukla {
+		model = "Microsoft Lumia 540";
+		compatible = "nokia,lukla", "qcom,msm8610", "lk2nd,device";
+
+		lk2nd,smd-rpm-hack-opening;
+		lk2nd,relocate-fb = <0x0FF00000>;
+	};
+};
