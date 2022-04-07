@@ -31,8 +31,16 @@ int mdp3_read_config(struct fbcon_config *fb)
 	fb->width = readl(MDP_DMA_P_BUF_Y_STRIDE)/3;
 	fb->height = readl(MDP_DMA_P_SIZE)>>16;
 	fb->stride = fb->width;
-
+	fb->format = FB_FORMAT_RGB888;
+	
 	fb->update_start = mdss_mdp_cmd_kickoff;
+	
+#define TARGET_FB_FORMAT 0x1800BF
+
+	if (fb->format != TARGET_FB_FORMAT) {
+		dprintf(CRITICAL, "Changing FB format %#x -> %#x\n", fb->format, TARGET_FB_FORMAT);
+		writel(0x1800bf, MDP_DMA_P_CONFIG);
+	}
 }
 
 void target_display_init(const char *panel_name)
