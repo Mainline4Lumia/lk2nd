@@ -131,6 +131,7 @@ int mdp_dsi_video_config(struct msm_panel_info *pinfo,
 	active_start_y = display_start_y + (lcdc->border_top * hsync_period);
 	active_end_y = display_end_y - (lcdc->border_bottom * hsync_period);
 
+#ifndef TARGET_MSM8610
 	/*Program QOS remapper settings*/
 	writel(0x1A9, MDP_DMA_P_QOS_REMAPPER);
 	writel(0x0, MDP_DMA_P_WATERMARK_0);
@@ -144,9 +145,9 @@ int mdp_dsi_video_config(struct msm_panel_info *pinfo,
 	dprintf(INFO, "Panic Lut0 %x Lut1 %x Robest %x\n",
 		(panic_config & 0xFFFF), ((panic_config >> 16) & 0xFFFF),
 		((panic_config >> 32) & 0xFFFF));
+#endif
 	// ------------- programming MDP_DMA_P_CONFIG ---------------------
 	writel(0x1800bf, MDP_DMA_P_CONFIG);	// rgb888
-
 
 	writel(active_start_x | active_start_y << 16, MDP_DMA_P_OUT_XY);
 	writel(yres << 16 | xres, MDP_DMA_P_SIZE);
@@ -160,12 +161,19 @@ int mdp_dsi_video_config(struct msm_panel_info *pinfo,
 	if (mdp_rev == MDP_REV_304 || mdp_rev == MDP_REV_305) {
 		writel(display_start_x | (display_end_x << 16),
 			MDP_DSI_VIDEO_DISPLAY_HCTL);
+#ifndef TARGET_MSM8610
 		writel(display_start_y, MDP_DSI_VIDEO_DISPLAY_V_START);
 		writel(display_end_y, MDP_DSI_VIDEO_DISPLAY_V_END);
 		writel(1 << 31 | active_start_x | (active_end_x << 16),
 			MDP_DSI_VIDEO_ACTIVE_HCTL);
 		writel(1 << 31 | active_start_y, MDP_DSI_VIDEO_ACTIVE_V_START);
 		writel(active_end_y, MDP_DSI_VIDEO_ACTIVE_V_END);
+#else
+		writel((lcdc->v_back_porch + lcdc->v_pulse_width) \
+			* hsync_period, MDP_DSI_VIDEO_DISPLAY_V_START);
+		writel(vsync_period - lcdc->v_front_porch * hsync_period - 1,
+	       MDP_DSI_VIDEO_DISPLAY_V_END);
+#endif
 	} else {
 		writel((pinfo->xres + lcdc->h_back_porch - 1) << 16 | \
 			lcdc->h_back_porch, MDP_DSI_VIDEO_DISPLAY_HCTL);
@@ -174,6 +182,7 @@ int mdp_dsi_video_config(struct msm_panel_info *pinfo,
 		writel((pinfo->yres + lcdc->v_back_porch) * hsync_period,
 			MDP_DSI_VIDEO_DISPLAY_V_END);
 	}
+
 	writel(lcdc->border_clr, MDP_DSI_VIDEO_BORDER_CLR);
 	writel(0x00000000, MDP_DSI_VIDEO_HSYNC_SKEW);
 	writel(0x00000000, MDP_DSI_VIDEO_CTL_POLARITY);
@@ -187,6 +196,7 @@ int mdp_dsi_cmd_config(struct msm_panel_info *pinfo,
 	int ret = 0;
 	unsigned short pack_pattern = 0x21;
 	unsigned char ystride = 3;
+#ifndef TARGET_MSM8610
         unsigned int sync_cfg;
 	unsigned long long panic_config = 0;
 
@@ -207,6 +217,7 @@ int mdp_dsi_cmd_config(struct msm_panel_info *pinfo,
 	dprintf(INFO, "Panic Lut0 %x Lut1 %x Robest %x\n",
 		(panic_config & 0xFFFF), ((panic_config >> 16) & 0xFFFF),
 		((panic_config >> 32) & 0xFFFF));
+#endif
 
 	writel(0x03ffffff, MDP_INTR_ENABLE);
 
@@ -220,6 +231,7 @@ int mdp_dsi_cmd_config(struct msm_panel_info *pinfo,
 
 	writel(0x10, MDP_DSI_CMD_MODE_ID_MAP);
 	writel(0x11, MDP_DSI_CMD_MODE_TRIGGER_EN);
+#ifndef TARGET_MSM8610
 	/* Enable Auto refresh */
 	sync_cfg = (pinfo->yres - 1) << 21;
 	sync_cfg |= BIT(19);
@@ -229,6 +241,7 @@ int mdp_dsi_cmd_config(struct msm_panel_info *pinfo,
 	writel(sync_cfg, MDP_SYNC_CONFIG_0);
 	writel((MDP_AUTOREFRESH_EN | MDP_AUTOREFRESH_FRAME_NUM),
 		MDP_AUTOREFRESH_CONFIG_P);
+#endif
 	mdelay(10);
 
 	return ret;
@@ -261,9 +274,11 @@ int mdp_dsi_cmd_off(void)
 		 */
 		mdelay(10);
 	}
+#ifndef TARGET_MSM8610
 	/* Disable Auto refresh */
 	if (readl(MDP_AUTOREFRESH_CONFIG_P))
 		writel(0, MDP_AUTOREFRESH_CONFIG_P);
+#endif
 	writel(0x00000000, MDP_INTR_ENABLE);
 	writel(0x01ffffff, MDP_INTR_CLEAR);
 	return NO_ERROR;
