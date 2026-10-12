@@ -366,9 +366,18 @@ void target_mmc_caps(struct mmc_host *host)
 #endif
 
 
+#define FB_ADDR_REG             0xFD901E14
+#define FB_NEW_ADDR             0x0FF00000
+
 void target_init(void)
 {
 	dprintf(INFO, "target_init()\n");
+
+	dprintf(INFO, "relocating framebuffer to 0x%d", FB_NEW_ADDR);
+	writel(FB_NEW_ADDR, FB_ADDR_REG);
+	writel(0x1, 0xfd900618);
+	writel(0x1, 0xfd900718);
+
 
 	spmi_init(PMIC_ARB_CHANNEL_NUM, PMIC_ARB_OWNER_ID);
 
