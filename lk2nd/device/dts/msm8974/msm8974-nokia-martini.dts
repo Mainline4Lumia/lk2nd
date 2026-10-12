@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: BSD-3-Clause
+
+#include <skeleton64.dtsi>
+#include <lk2nd.dtsi>
+
+/ {
+	qcom,msm-id = <QCOM_ID_MSM8974 0x10008 0x20002 0x0>;
+};
+
+&lk2nd {
+	model = "Nokia Lumia 930";
+	compatible = "nokia,martini";
+};

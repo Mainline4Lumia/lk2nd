@@ -8,6 +8,7 @@ QCDTBS += \
 	$(LOCAL_DIR)/msm8974-blackberry-wolverine.dtb \
 	$(LOCAL_DIR)/msm8974-htc-m8.dtb \
 	$(LOCAL_DIR)/msm8974-lge-d855.dtb \
+	$(LOCAL_DIR)/msm8974-nokia-martini.dtb \
 
 ADTBS += \
 	$(LOCAL_DIR)/msm8974-lge-hammerhead.dtb \
